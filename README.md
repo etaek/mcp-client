@@ -1,11 +1,15 @@
 # MCP Client
 
-MCP(Model Context Protocol) 클라이언트 구현체로, Azure OpenAI와 통합되어 다양한 MCP 서버들과 상호작용할 수 있는 클라이언트입니다.
+MCP(Model Context Protocol) 클라이언트 구현체로, Azure OpenAI 및 AWS Bedrock과 통합되어 다양한 MCP 서버들과 상호작용할 수 있는 클라이언트입니다.
 
 ## 주요 기능
 
 - Azure OpenAI 통합
   - GPT-4 모델 지원
+  - 스트리밍 응답 처리
+  - 도구 호출 및 결과 처리
+- AWS Bedrock 통합
+  - Claude 3 Sonnet 모델 지원
   - 스트리밍 응답 처리
   - 도구 호출 및 결과 처리
 - 다중 MCP 서버 연결 지원
@@ -38,7 +42,7 @@ pip install -r requirements.txt
 
 ## 사용 방법
 
-1. Azure OpenAI 설정
+### Azure OpenAI 설정
 
 ```env
 AZURE_OPENAI_API_KEY=your_api_key_here
@@ -47,7 +51,15 @@ AZURE_OPENAI_API_VERSION="2024-12-01-preview"
 AZURE_OPENAI_DEPLOYMENT="your_deployment_name_here"
 ```
 
-2. MCP 서버 설정
+### AWS Bedrock 설정
+
+```env
+AWS_ACCESS_KEY_ID=your_access_key_here
+AWS_SECRET_ACCESS_KEY=your_secret_key_here
+AWS_DEFAULT_REGION=your_region_here  # e.g., us-east-1
+```
+
+### MCP 서버 설정
 
 ```json
 {
@@ -64,11 +76,18 @@ AZURE_OPENAI_DEPLOYMENT="your_deployment_name_here"
 }
 ```
 
-3. 실행
+### 실행
+
+Azure OpenAI 클라이언트 실행:
 
 ```bash
-python aws_app.py  # AWS Bedrock 클라이언트 실행
-python azure_app.py  # Azure OpenAI 클라이언트 실행
+python azure_app.py
+```
+
+AWS Bedrock 클라이언트 실행:
+
+```bash
+python aws_app.py
 ```
 
 ## 파일 구조
@@ -86,6 +105,8 @@ python azure_app.py  # Azure OpenAI 클라이언트 실행
 - openai>=1.12.0
 - python-dotenv>=1.0.0
 - mcp-core>=0.1.0
+- boto3>=1.34.0
+- botocore>=1.34.0
 
 ## 라이선스
 
