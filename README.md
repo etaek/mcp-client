@@ -8,15 +8,15 @@ MCP(Model Context Protocol) 클라이언트 구현체로, Azure OpenAI 및 AWS B
   - GPT-4 모델 지원
   - 스트리밍 응답 처리
   - 도구 호출 및 결과 처리
+    
 - AWS Bedrock 통합
   - Claude 3 Sonnet 모델 지원
   - 스트리밍 응답 처리
   - 도구 호출 및 결과 처리
+    
 - 다중 MCP 서버 연결 지원
-  - 파일시스템 서버
-  - PostgreSQL 서버
-  - GitHub 서버
-  - YouTube 데이터 서버
+  - 파일시스템 서버, PostgreSQL 서버 etc ..
+
 - 비동기 통신 지원
 - 환경 설정 관리
 
@@ -74,7 +74,8 @@ boto3가 자동으로 이 설정을 사용합니다.
         "@modelcontextprotocol/server-filesystem",
         "/path/to/directory"
       ]
-    }
+    },
+    ...
   }
 }
 ```
@@ -84,13 +85,13 @@ boto3가 자동으로 이 설정을 사용합니다.
 Azure OpenAI 클라이언트 실행:
 
 ```bash
-python azure_app.py
+streamlit run azure_app.py
 ```
 
 AWS Bedrock 클라이언트 실행:
 
 ```bash
-python aws_app.py
+streamlit run aws_app.py
 ```
 
 ## 파일 구조
@@ -103,29 +104,4 @@ python aws_app.py
 - `mcp_config.json`: MCP 서버 설정
 - `requirements.txt`: 프로젝트 의존성
 
-## 의존성
-
-- openai>=1.12.0
-- python-dotenv>=1.0.0
-- mcp-core>=0.1.0
-- boto3>=1.34.0
-- botocore>=1.34.0
-
-## 라이선스
-
-MIT License
-
-## 작성자
-
-- etaek
-
-### Before the run
-
-1. In `client/main.py`, update the `boto3.client` section with your actual AWS credentials and region
-2. In `client/main.py`, change the `mcp_file_path` to your path
-
-### Run
-
-```bash
-PYTHONPATH=. uv run client/main.py
 ```
