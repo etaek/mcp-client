@@ -3,7 +3,7 @@ import asyncio
 import json
 from typing import Dict, Any
 import os
-from client import MCPClient
+from aws_client import AwsClient
 
 # MCP 서버 구성 파일을 로드하는 함수
 def load_mcp_config():
@@ -65,7 +65,7 @@ async def connect_servers(server_config):
         await st.session_state.mcp_client.close_all()
 
     # 새 클라이언트 생성 및 서버 연결
-    client = MCPClient(server_config)
+    client = AwsClient(server_config)
     await client.connect_to_server()
     tools = await client.list_all_tools()
 

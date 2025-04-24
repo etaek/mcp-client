@@ -6,7 +6,7 @@ import boto3
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-class MCPClient:
+class AwsClient:
     def __init__(self, servers_config: dict):
         # Initialize session and client objects
         self.server_configs = servers_config
