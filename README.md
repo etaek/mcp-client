@@ -53,11 +53,14 @@ AZURE_OPENAI_DEPLOYMENT="your_deployment_name_here"
 
 ### AWS Bedrock 설정
 
-```env
-AWS_ACCESS_KEY_ID=your_access_key_here
-AWS_SECRET_ACCESS_KEY=your_secret_key_here
-AWS_DEFAULT_REGION=your_region_here  # e.g., us-east-1
+AWS CLI를 통해 자격 증명을 설정합니다:
+
+```bash
+aws configure
 ```
+
+위 명령어 실행 후 AWS Access Key ID, Secret Access Key, 리전 등을 입력하면 됩니다.
+boto3가 자동으로 이 설정을 사용합니다.
 
 ### MCP 서버 설정
 
