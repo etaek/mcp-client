@@ -67,14 +67,16 @@ AZURE_OPENAI_DEPLOYMENT="your_deployment_name_here"
 3. 실행
 
 ```bash
-python app.py
+python aws_app.py  # AWS Bedrock 클라이언트 실행
+python azure_app.py  # Azure OpenAI 클라이언트 실행
 ```
 
 ## 파일 구조
 
 - `azure_client.py`: Azure OpenAI 클라이언트 구현
-- `app.py`: 메인 애플리케이션
-- `client.py`: 기본 클라이언트 구현
+- `aws_client.py`: AWS Bedrock 클라이언트 구현
+- `azure_app.py`: Azure OpenAI 애플리케이션
+- `aws_app.py`: AWS Bedrock 애플리케이션
 - `.env.example`: 환경 변수 예제
 - `mcp_config.json`: MCP 서버 설정
 - `requirements.txt`: 프로젝트 의존성
