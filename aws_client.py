@@ -67,6 +67,27 @@ class AwsClient:
         return result
 
 
+    def _send_request(self, messages: list, system_prompt: str, tools: list) -> dict:
+        """
+        AWS Bedrock에 요청을 보내는 내부 메소드
+
+        Args:
+            messages (list): 대화 메시지 목록
+            system_prompt (str): 시스템 프롬프트
+            tools (list): 사용 가능한 도구 목록
+
+        Returns:
+            dict: Bedrock 응답
+        """
+        return self.bedrock_client.converse(
+            modelId="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+            messages=messages,
+            system=[{"text": system_prompt}],
+            toolConfig={
+                "tools": tools
+            },
+        )
+
     async def process_query_stream(self, query: str) -> AsyncGenerator[Dict[str, Any], None]:
         """Process a query using Claude and available tools, streaming the results"""
         messages = [
@@ -85,14 +106,7 @@ class AwsClient:
 도구 실행 결과를 바탕으로 사용자의 요청에 대한 최종 답변을 자연어로 제공해주세요."""
 
         # Initial Bedrock API call
-        response = self.bedrock_client.converse(
-            modelId="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-            messages=messages,
-            system=[{"text": system_prompt}],
-            toolConfig={
-                "tools": tools
-            },
-        )
+        response = self._send_request(messages, system_prompt, tools)
 
         # 도구 호출이 여러 번 발생할 수 있으므로 반복문으로 처리
         while True:
@@ -168,14 +182,7 @@ class AwsClient:
                 break
 
             # 다음 응답 가져오기
-            response = self.bedrock_client.converse(
-                modelId="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-                messages=messages,
-                system=[{"text": system_prompt}],
-                toolConfig={
-                    "tools": tools
-                },
-            )
+            response = self._send_request(messages, system_prompt, tools)
 
             # 다음 응답의 텍스트 부분만 추출해서 전송
             for content in response['output']['message']['content']:

@@ -76,6 +76,43 @@ class AzureClient:
         result = await session.call_tool(tool_name, arguments=arguments)
         return result
 
+    def _send_request(
+        self,
+        messages: list,
+        tools: list,
+        *,
+        tool_choice: str = "auto",
+        response_format: dict = None,
+        max_tokens: int = 1000,
+        temperature: float = 0.2,
+    ) -> Any:
+        """
+        Azure OpenAI에 요청을 보내는 내부 메소드
+
+        Args:
+            messages (list): 대화 메시지 목록
+            tools (list): 사용 가능한 도구 목록
+            tool_choice (str, optional): 도구 선택 방식. Defaults to "auto".
+            response_format (dict, optional): 응답 형식. Defaults to None.
+            max_tokens (int, optional): 최대 토큰 수. Defaults to 1000.
+            temperature (float, optional): 온도 파라미터. Defaults to 0.2.
+
+        Returns:
+            Any: Azure OpenAI 응답
+        """
+        params = {
+            "model": self.deployment,
+            "messages": messages,
+            "tools": tools,
+            "tool_choice": tool_choice,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+        }
+
+        if response_format:
+            params["response_format"] = response_format
+
+        return self.client.chat.completions.create(**params)
 
     async def process_query_stream(self, query: str) -> AsyncGenerator[Dict[str, Any], None]:
         """Process a query using Azure OpenAI and available tools, streaming the results"""
@@ -97,13 +134,9 @@ class AzureClient:
 
         while True:
             # Azure OpenAI API 호출
-            response = self.client.chat.completions.create(
-                model=self.deployment,
+            response = self._send_request(
                 messages=messages,
-                tools=tools,
-                tool_choice="auto",  # 자동으로 도구 선택
-                max_tokens=1000,
-                temperature=0.2,
+                tools=tools
             )
 
             choice = response.choices[0]
@@ -168,15 +201,13 @@ class AzureClient:
                     })
 
         # 최종 응답 생성
-        final_response = self.client.chat.completions.create(
-            model=self.deployment,
+        final_response = self._send_request(
             messages=messages,
             tools=tools,
-            tool_choice="none",  # 최종 응답에서는 도구 사용 안 함
-            response_format={"type": "text"},  # 텍스트 응답 요청
+            tool_choice="none",
+            response_format={"type": "text"},
             max_tokens=4096,
-            temperature=1.0,
-            top_p=1.0
+            temperature=1.0
         )
 
         if final_response.choices[0].message.content:
